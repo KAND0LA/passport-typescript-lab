@@ -3,12 +3,14 @@ import passport from "passport";
 import PassportConfig from "./PassportConfig";
 
 import localStrategy from "./passportStrategies/localStrategy";
-// import passportGitHubStrategy from "./passportStrategies/githubStrategy";
+import passportGitHubStrategy from "./passportStrategies/githubStrategy";  // Un-comment this line
 
-const passportConfig = new PassportConfig([localStrategy /* passportGitHubStrategy */]);
+// Include passportGitHubStrategy in the strategies array
+const passportConfig = new PassportConfig([localStrategy, passportGitHubStrategy]);
 const passportMiddleware = (app: Application): void => {
   app.use(passport.initialize());
   app.use(passport.session());
 };
 
 export default passportMiddleware;
+

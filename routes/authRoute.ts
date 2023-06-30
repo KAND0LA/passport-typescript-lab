@@ -33,4 +33,14 @@ router.get("/logout", (req, res) => {
   res.redirect("/auth/login");
 });
 
+// Add the following routes for GitHub authentication
+router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
+
+router.get('/github/callback', 
+  passport.authenticate('github', { failureRedirect: '/auth/login' }),
+  function(req, res) {
+    // Successful authentication, redirect to dashboard.
+    res.redirect('/dashboard');
+  });
+
 export default router;

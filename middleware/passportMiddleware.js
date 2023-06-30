@@ -6,8 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const passport_1 = __importDefault(require("passport"));
 const PassportConfig_1 = __importDefault(require("./PassportConfig"));
 const localStrategy_1 = __importDefault(require("./passportStrategies/localStrategy"));
-// import passportGitHubStrategy from "./passportStrategies/githubStrategy";
-const passportConfig = new PassportConfig_1.default([localStrategy_1.default /* passportGitHubStrategy */]);
+const githubStrategy_1 = __importDefault(require("./passportStrategies/githubStrategy")); // Un-comment this line
+// Include passportGitHubStrategy in the strategies array
+const passportConfig = new PassportConfig_1.default([localStrategy_1.default, githubStrategy_1.default]);
 const passportMiddleware = (app) => {
     app.use(passport_1.default.initialize());
     app.use(passport_1.default.session());
