@@ -10,32 +10,29 @@ const localStrategy = new LocalStrategy(
   },
   (email, password, done) => {
     const user = getUserByEmailIdAndPassword(email, password);
-    return user
-      ? done(null, user)
-      : done(null, false, {
-          message: "Your login details are not valid. Please try again",
-        });
+    if (user) {
+      return done(null, user);
+    } else {
+      return done(null, false, {
+        message: "User not found in database. Please register first."
+      });
+    }
   }
 );
 
-/*
-FIX ME (types) 😭
-*/
-passport.serializeUser(function (user: any, done: any) {
-  done(null, user.id);
+passport.serializeUser((user: Express.User, done) => {
+  done(null, (user as any).id);
 });
 
-/*
-FIX ME (types) 😭
-*/
-passport.deserializeUser(function (id: any, done: any) {
-  let user = getUserById(id);
+passport.deserializeUser((id: unknown, done) => {
+  let user = getUserById(id as string);
   if (user) {
     done(null, user);
   } else {
     done({ message: "User not found" }, null);
   }
 });
+
 
 const passportLocalStrategy: PassportStrategy = {
   name: 'local',

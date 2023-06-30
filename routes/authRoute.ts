@@ -8,14 +8,23 @@ router.get("/login", forwardAuthenticated, (req, res) => {
   res.render("login");
 })
 
-router.post(
-  "/login",
-  passport.authenticate("local", {
-    successRedirect: "/dashboard",
-    failureRedirect: "/auth/login",
-    /* FIX ME: 😭 failureMsg needed when login fails */
-  })
-);
+router.post("/login", (req, res, next) => {
+  passport.authenticate("local", (err, user, info) => {
+    if (err) { 
+      return next(err); 
+    }
+    if (!user) { 
+      // Redirect to the login page with an error message
+      return res.redirect('/auth/login?error=' + info.message); 
+    }
+    req.logIn(user, function(err) {
+      if (err) { 
+        return next(err); 
+      }
+      return res.redirect('/dashboard');
+    });
+  })(req, res, next);
+});
 
 router.get("/logout", (req, res) => {
   req.logout((err) => {
